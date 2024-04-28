@@ -40,4 +40,6 @@ model File {
   updatedAt    DateTime     @updatedAt
   User         User?        @relation(fields: [userId], references: [id])
   userId       String?
+
+  @@index([userId])
 }
