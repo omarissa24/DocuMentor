@@ -57,48 +57,46 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
 
       const previousMessages = utils.getFileMessages.getInfiniteData();
 
-      if (previousMessages) {
-        utils.getFileMessages.setInfiniteData(
-          {
-            fileId,
-            limit: INFINITE_QUERY_LIMIT,
-          },
-          (oldData) => {
-            if (!oldData) {
-              return {
-                pages: [],
-                pageParams: [],
-              };
-            }
-            let newPages = [...oldData.pages];
-            const lastPage = newPages[0]!;
-
-            lastPage.messages = [
-              ...lastPage.messages,
-              {
-                id: crypto.randomUUID(),
-                text: message,
-                updatedAt: new Date().toISOString(),
-                isUserMessage: true,
-              },
-            ];
-
-            newPages[0] = lastPage;
-
+      utils.getFileMessages.setInfiniteData(
+        {
+          fileId,
+          limit: INFINITE_QUERY_LIMIT,
+        },
+        (oldData) => {
+          if (!oldData) {
             return {
-              pages: newPages,
-              pageParams: oldData.pageParams,
+              pages: [],
+              pageParams: [],
             };
           }
-        );
+          let newPages = [...oldData.pages];
+          const lastPage = newPages[0]!;
 
-        setIsLoading(true);
+          lastPage.messages = [
+            {
+              id: crypto.randomUUID(),
+              text: message,
+              updatedAt: new Date().toISOString(),
+              isUserMessage: true,
+            },
+            ...lastPage.messages,
+          ];
 
-        return {
-          previousMessages:
-            previousMessages?.pages.flatMap((page) => page.messages) ?? [],
-        };
-      }
+          newPages[0] = lastPage;
+
+          return {
+            pages: newPages,
+            pageParams: oldData.pageParams,
+          };
+        }
+      );
+
+      setIsLoading(true);
+
+      return {
+        previousMessages:
+          previousMessages?.pages.flatMap((page) => page.messages) ?? [],
+      };
     },
     onSuccess: async (stream) => {
       setIsLoading(false);
