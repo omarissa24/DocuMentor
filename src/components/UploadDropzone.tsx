@@ -32,7 +32,6 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setIsUploading(false);
           return 100;
         }
 

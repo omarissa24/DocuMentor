@@ -122,7 +122,9 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
         )?.read();
         done = doneValue;
         if (value) {
-          accumulated += decoder.decode(value, { stream: !done });
+          accumulated += decoder
+            .decode(value, { stream: !done })
+            .replace(/(\d+:\s*")|(")/g, "");
         }
 
         // append chunks to the message
