@@ -23,6 +23,9 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  images: {
+    domains: ["gravatar.com"],
+  },
 };
 
 export default nextConfig;
